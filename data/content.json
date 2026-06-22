@@ -212,8 +212,13 @@
   "dealers": [
     {
       "name": "Duckit Motorsport",
-      "address": "Puchong, Selangor, Malaysia",
+      "address": " No.16, Jalan MJ 15, Jalan Meranti Jaya, Taman Perindustrian, 47120 Puchong, Selangor",
       "contact": "+60 10-219 2863"
+    },
+    {
+      "name": "Eugene Performance Motorsport",
+      "address": "No.42A, Jln Hang Lekir 12, Taman Industri Jaya, 81300 Skudai, Johor Darul Ta'zim",
+      "contact": "+60 12-701 9588"
     }
   ]
 }
