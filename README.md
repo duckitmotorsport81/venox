@@ -76,6 +76,27 @@ in the `exports/` folder.
 
 ---
 
+## 4b. Publish FREE as a static site (recommended for client work)
+
+You don't need a paid server. Edit content locally with the admin, then build a
+static copy and host it free (Netlify / Cloudflare Pages / GitHub Pages) on any domain.
+
+```bash
+npm run build      # creates dist/  (index.html + media/)
+```
+
+Then publish `dist/`:
+- **Netlify (easiest):** go to <https://app.netlify.com/drop> and **drag the `dist` folder** in → instant free URL. Create a free account to keep the site and add your custom domain (Site → Domain management → Add domain → follow the DNS records).
+- **Cloudflare Pages:** connect this repo, set **build command** `npm run build`, **output dir** `dist`. Free, fast CDN, free custom domains.
+
+To update later: edit in the local admin → `npm run build` again → re-publish `dist/`
+(drag it in again, or push to the connected repo).
+
+The static site keeps everything visitors use (slideshow, background video, Models
+search, dealers, WhatsApp quote form). It just doesn't include the live `/admin` —
+that's your local design tool. (If a client needs to self-edit online, that one needs
+the paid server in §6.)
+
 ## 5. Re-running the migration (advanced)
 
 The site was generated once from the original all-in-one `index.html` using:
