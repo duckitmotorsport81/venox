@@ -137,9 +137,10 @@
   </div>
 
   <div class="savebar">
-    <span class="note" id="saveNote">Step 1: click <b>Save changes</b> (saves on this computer). &nbsp;Step 2: to put it on the live website, run <b>"2) PUBLISH WEBSITE"</b>.</span>
+    <span class="note" id="saveNote"><b>Save changes</b> = save on this computer. &nbsp;<b>Publish to live</b> = put it on the public website (~1 min).</span>
     <button class="btn btn-ghost" id="reloadBtn">Discard &amp; reload</button>
-    <button class="btn btn-primary" id="saveBtn">Save changes</button>
+    <button class="btn btn-ghost" id="saveBtn">Save changes</button>
+    <button class="btn btn-primary" id="publishBtn" style="background:#0a7d33;border-color:#0a7d33">Publish to live ↑</button>
   </div>
 </div>
 
@@ -515,14 +516,23 @@ function showTab(name){
   ({hero:renderHero,featured:renderFeatured,systems:renderSystems,models:renderModels,dealers:renderDealers,search:renderSearch,site:renderSite})[name]();
 }
 
-/* ============ save / export ============ */
+/* ============ save / publish / export ============ */
 async function save(){
   const btn=$('#saveBtn'); btn.disabled=true; btn.textContent='Saving…';
   try{
     await api('/api/content',{method:'PUT',body:JSON.stringify(content)});
-    markSaved(); toast('Saved — live site updated','ok');
+    markSaved(); toast('Saved on this computer','ok');
   }catch(err){ toast(err.message,'err'); }
   finally{ btn.disabled=false; btn.textContent='Save changes'; }
+}
+async function publishLive(){
+  if(dirty){ await save(); }            // always save first so nothing is missed
+  const b=$('#publishBtn'); b.disabled=true; const t=b.textContent; b.textContent='Publishing…';
+  try{
+    const r=await api('/api/publish',{method:'POST'});
+    toast(r.message||'Published — live in ~1 min','ok');
+  }catch(err){ toast('Publish failed: '+err.message,'err'); }
+  finally{ b.disabled=false; b.textContent=t; }
 }
 async function doExport(){
   const btn=$('#exportBtn'); btn.disabled=true; btn.textContent='Exporting…';
@@ -561,6 +571,7 @@ $('#loginForm').addEventListener('submit', async (e)=>{
 });
 $('#logoutBtn').addEventListener('click', async ()=>{ await api('/api/logout',{method:'POST'}); showLogin(); });
 $('#saveBtn').addEventListener('click', save);
+$('#publishBtn').addEventListener('click', publishLive);
 $('#reloadBtn').addEventListener('click', ()=>{ if(!dirty||confirm('Discard unsaved changes?')) loadContent(); });
 $('#exportBtn').addEventListener('click', doExport);
 $('#tabs').addEventListener('click', (e)=>{ const t=e.target.closest('.tab'); if(t) showTab(t.dataset.tab); });

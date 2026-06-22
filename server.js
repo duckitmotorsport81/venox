@@ -14,6 +14,7 @@ try { require('dotenv').config(); } catch (e) { /* optional: loads a local .env 
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execSync } = require('child_process');
 const express = require('express');
 const session = require('express-session');
 const multer = require('multer');
@@ -172,6 +173,23 @@ app.post('/api/export', requireAuth, (req, res) => {
     res.set('Content-Disposition', `attachment; filename="${name}"`);
     res.type('html').send(html);
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// publish to live — commits + pushes local changes; GitHub rebuilds the static site.
+// (Only meaningful when running locally with git configured + a remote set.)
+app.post('/api/publish', requireAuth, (req, res) => {
+  try {
+    execSync('git add -A', { cwd: ROOT });
+    const changed = execSync('git status --porcelain', { cwd: ROOT }).toString().trim();
+    if (!changed) return res.json({ ok: true, message: 'Already up to date — nothing new to publish.' });
+    const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+    execSync(`git commit -m "Update site content (${stamp})"`, { cwd: ROOT });
+    execSync('git push', { cwd: ROOT, stdio: 'pipe' });
+    res.json({ ok: true, message: 'Published! Your live site updates in about a minute.' });
+  } catch (e) {
+    const msg = (e.stderr && e.stderr.toString()) || e.message || 'Publish failed';
+    res.status(500).json({ ok: false, error: msg.slice(0, 400) });
+  }
 });
 
 // health check (for hosting platforms)
