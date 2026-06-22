@@ -113,18 +113,20 @@
   "models": [
     {
       "id": "gt3rs",
-      "brand": "Porsche",
-      "title": "992.1 GT3 RS Exhaust",
+      "brand": "BMW",
+      "title": "G87 M2 S58",
       "sub": "OPF / Non-OPF Valvetronic Exhaust System",
       "pn": "PN — add part number",
-      "engine": "4.0L Flat-Six",
-      "year": "2021–",
+      "engine": "3.0L S58 Twin-Turbo",
+      "year": "2022",
       "mat": "Stainless Steel",
       "valve": "Valvetronic",
       "desc": "A full Valvetronic system engineered for the 992.1 GT3 RS. Mandrel-bent T304 stainless with electronically controlled valves — track-day volume on demand, civil on the cruise. Supplied, fitted and tuned for fit at Duckit Motorsport.",
       "review": "FI Exhaust crushed it. Sounds exactly how it should — straight from the factory. Open valve, closed valve, it's all there.",
       "reviewer": "— Hunter L., 992.1 GT3 RS",
-      "images": [],
+      "images": [
+        "media/model-gt3rs-1782138741436-18f676.jpg"
+      ],
       "video": "",
       "series": "Venox Stainless Steel"
     },
@@ -194,23 +196,6 @@
       "desc": "Valvetronic cat-back for the GR Supra (A90, B58). Wakes up the straight-six with a sharper, fuller tone and on-demand volume from the cabin.",
       "review": "Woke the B58 right up. Sharper, fuller, and I can still keep it civil for the daily.",
       "reviewer": "— Add reviewer, GR Supra A90",
-      "images": [],
-      "video": "",
-      "series": "Venox Stainless Steel"
-    },
-    {
-      "id": "g87m2",
-      "brand": "BMW M",
-      "title": "G87 M2 Exhaust",
-      "sub": "Valvetronic Cat-Back Exhaust System",
-      "pn": "PN — add part number",
-      "engine": "3.0L S58 Twin-Turbo",
-      "year": "3.0L S58",
-      "mat": "Stainless Steel",
-      "valve": "Valvetronic",
-      "desc": "Valvetronic cat-back for the G87 M2 (S58). Mandrel-bent T304 with quad tips — aggressive when you want it, neighbour-friendly on cold start.",
-      "review": "Aggressive when I want it, neighbour-friendly on start-up. Exactly as described.",
-      "reviewer": "— Adrian L., G87 M2",
       "images": [],
       "video": "",
       "series": "Venox Stainless Steel"
