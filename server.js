@@ -90,7 +90,7 @@ function videoType(u) {
   u = (u || '').toLowerCase();
   if (/\.webm(\?|$)/.test(u)) return 'video/webm';
   if (/\.ogv(\?|$)/.test(u)) return 'video/ogg';
-  if (/\.(mov|qt)(\?|$)/.test(u)) return 'video/quicktime';
+  if (/\.(mov|qt)(\?|$)/.test(u)) return 'video/mp4'; // .mov is MP4-family; label as mp4 so browsers attempt playback
   if (/\.m4v(\?|$)/.test(u)) return 'video/x-m4v';
   return 'video/mp4';
 }
@@ -204,7 +204,9 @@ function requireAuth(req, res, next) {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, MEDIA_DIR),
   filename: (req, file, cb) => {
-    const ext = (path.extname(file.originalname) || '').toLowerCase().replace(/[^.a-z0-9]/g, '') || '.bin';
+    let ext = (path.extname(file.originalname) || '').toLowerCase().replace(/[^.a-z0-9]/g, '') || '.bin';
+    // .mov / QuickTime from phones is an MP4-family container — store as .mp4 so browsers will play it
+    if (ext === '.mov' || ext === '.qt' || file.mimetype === 'video/quicktime') ext = '.mp4';
     const base = (req.body && req.body.name ? String(req.body.name) : 'media')
       .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'media';
     cb(null, `${base}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}${ext}`);
