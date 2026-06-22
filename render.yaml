@@ -1,0 +1,25 @@
+# Render.com blueprint. In Render: New → Blueprint → connect this repo.
+# A persistent disk keeps uploaded photos + content edits across deploys/restarts.
+# Disks require a paid instance type (the "free" plan has an ephemeral disk and
+# will lose uploads on restart). Starter is ~$7/mo at time of writing.
+services:
+  - type: web
+    name: venox
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: VENOX_ADMIN_PASSWORD
+        sync: false            # set this yourself in the Render dashboard
+      - key: VENOX_SESSION_SECRET
+        generateValue: true    # Render generates a strong random value
+      - key: VENOX_DATA_DIR
+        value: /var/data
+      - key: VENOX_MEDIA_DIR
+        value: /var/data/media
+    disk:
+      name: venox-data
+      mountPath: /var/data
+      sizeGB: 1

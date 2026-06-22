@@ -1,0 +1,7 @@
+node_modules/
+exports/
+*.tmp
+.env
+.DS_Store
+Thumbs.db
+.claude/

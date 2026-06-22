@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VENOX — Admin</title>
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#141417; --panel2:#1b1b1f; --line:#2a2a30; --line2:#3a3a42;
+    --ink:#f3f3f5; --ash:#a9a9b2; --dim:#75757f; --red:#c20e22; --red2:#e11428; --ok:#1f9d55;
+    --data:'DM Mono',ui-monospace,Menlo,Consolas,monospace;
+    --ui:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--ui);line-height:1.5;font-size:15px}
+  a{color:var(--red2)}
+  /* ---- login ---- */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .login{width:100%;max-width:360px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:32px}
+  .login h1{font-size:1.3rem;letter-spacing:.04em}
+  .login .sub{color:var(--ash);font-size:.9rem;margin:6px 0 22px}
+  .brandbar{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .brandbar .dot{width:10px;height:10px;border-radius:2px;background:var(--red);box-shadow:0 0 12px var(--red)}
+  .brandbar b{letter-spacing:.22em;font-family:var(--data);font-size:.8rem}
+  /* ---- shell ---- */
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;
+    padding:12px 20px;background:rgba(12,12,14,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .logo{display:flex;align-items:center;gap:9px;font-family:var(--data);letter-spacing:.2em;font-size:.82rem}
+  .topbar .logo .dot{width:9px;height:9px;border-radius:2px;background:var(--red);box-shadow:0 0 10px var(--red)}
+  .topbar .spacer{flex:1}
+  .status{font-size:.82rem;color:var(--dim);font-family:var(--data)}
+  .status.dirty{color:#e8b23a}
+  .status.saved{color:var(--ok)}
+  .tabs{display:flex;gap:4px;padding:14px 20px 0;flex-wrap:wrap;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:57px;z-index:15}
+  .tab{padding:9px 16px;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;
+    color:var(--ash);font-size:.9rem;font-weight:600}
+  .tab.active{background:var(--panel);border-color:var(--line);color:var(--ink)}
+  .wrap{max-width:980px;margin:0 auto;padding:26px 20px 120px}
+  .intro{color:var(--ash);font-size:.92rem;margin-bottom:20px}
+  /* ---- buttons ---- */
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:var(--panel2);
+    color:var(--ink);padding:9px 15px;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;font-family:inherit}
+  .btn:hover{border-color:var(--red)}
+  .btn-primary{background:var(--red);border-color:var(--red);color:#fff}
+  .btn-primary:hover{background:var(--red2)}
+  .btn-ghost{background:transparent}
+  .btn-sm{padding:6px 11px;font-size:.8rem}
+  .btn-danger{color:#ff7b86;border-color:#52242a}
+  .btn:disabled{opacity:.5;cursor:default}
+  /* ---- cards/fields ---- */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+  .card h3{font-size:1rem;margin-bottom:2px}
+  .card .meta{color:var(--dim);font-size:.8rem;font-family:var(--data);margin-bottom:14px}
+  .row{display:flex;gap:16px;flex-wrap:wrap}
+  .field{margin-bottom:14px;flex:1;min-width:220px}
+  .field label{display:block;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ash);margin-bottom:6px}
+  .field input,.field textarea,.field select{width:100%;background:var(--panel2);border:1px solid var(--line2);color:var(--ink);
+    padding:10px 12px;border-radius:8px;font-family:inherit;font-size:.92rem}
+  .field textarea{min-height:78px;resize:vertical}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--red)}
+  .hint{color:var(--dim);font-size:.78rem;margin-top:5px}
+  .sectionhead{display:flex;align-items:center;justify-content:space-between;margin:6px 0 14px}
+  .sectionhead h2{font-size:1.15rem}
+  /* ---- media ---- */
+  .thumb{position:relative;width:160px;aspect-ratio:16/10;border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+    background:#101013 center/cover no-repeat;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .empty{color:var(--dim);font-size:.78rem;font-family:var(--data)}
+  .thumb .badge{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;font-size:.66rem;padding:2px 6px;border-radius:4px;font-family:var(--data)}
+  .media-row{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .media-actions{display:flex;flex-direction:column;gap:8px}
+  .gallery{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .gitem{position:relative}
+  .gitem .rm{position:absolute;top:4px;right:4px}
+  .slot{width:160px;aspect-ratio:16/10;border:1px dashed var(--line2);border-radius:8px;display:flex;align-items:center;
+    justify-content:center;color:var(--dim);cursor:pointer;font-size:.82rem;background:var(--panel2)}
+  .slot:hover{border-color:var(--red);color:var(--ink)}
+  .uploading{font-size:.78rem;color:#e8b23a;font-family:var(--data)}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--line2);
+    padding:12px 20px;border-radius:10px;font-size:.9rem;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.5);opacity:0;transition:opacity .25s,transform .25s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+  .toast.err{border-color:#52242a;color:#ff8b95}
+  .toast.ok{border-color:#1f5d3a;color:#7ee2a6}
+  .hidden{display:none!important}
+  .savebar{position:fixed;bottom:0;left:0;right:0;z-index:18;display:flex;gap:12px;align-items:center;justify-content:flex-end;
+    padding:12px 20px;background:rgba(12,12,14,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  .savebar .note{margin-right:auto;color:var(--dim);font-size:.82rem}
+  code{font-family:var(--data);background:var(--panel2);padding:1px 6px;border-radius:4px;font-size:.85em}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginView" class="login-wrap hidden">
+  <form class="login" id="loginForm">
+    <div class="brandbar"><span class="dot"></span><b>VENOX ADMIN</b></div>
+    <h1>Sign in</h1>
+    <p class="sub">Enter the admin password to manage site content.</p>
+    <div class="field">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" type="submit">Sign in</button>
+    <p class="hint" id="loginErr" style="color:#ff8b95;margin-top:12px"></p>
+  </form>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <span class="logo"><span class="dot"></span>VENOX ADMIN</span>
+    <span class="spacer"></span>
+    <span class="status" id="status">Loaded</span>
+    <a class="btn btn-sm btn-ghost" href="/" target="_blank">View site ↗</a>
+    <button class="btn btn-sm btn-ghost" id="exportBtn">Export file</button>
+    <button class="btn btn-sm btn-ghost" id="logoutBtn">Logout</button>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="hero">Hero slides</div>
+    <div class="tab" data-tab="featured">Featured carousel</div>
+    <div class="tab" data-tab="systems">System cards</div>
+    <div class="tab" data-tab="models">Models</div>
+    <div class="tab" data-tab="dealers">Dealers</div>
+    <div class="tab" data-tab="search">Search filters</div>
+    <div class="tab" data-tab="site">Site</div>
+  </div>
+
+  <div class="wrap">
+    <div id="panel-hero" class="panel"></div>
+    <div id="panel-featured" class="panel hidden"></div>
+    <div id="panel-systems" class="panel hidden"></div>
+    <div id="panel-models" class="panel hidden"></div>
+    <div id="panel-dealers" class="panel hidden"></div>
+    <div id="panel-search" class="panel hidden"></div>
+    <div id="panel-site" class="panel hidden"></div>
+  </div>
+
+  <div class="savebar">
+    <span class="note" id="saveNote">Photos upload instantly. Click <b>Save changes</b> to publish edits to the live site.</span>
+    <button class="btn btn-ghost" id="reloadBtn">Discard &amp; reload</button>
+    <button class="btn btn-primary" id="saveBtn">Save changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ tiny helpers ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+function el(tag, props={}, kids=[]) {
+  const e = document.createElement(tag);
+  for (const k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k === 'text') e.textContent = props[k];
+    else if (k.startsWith('on') && typeof props[k] === 'function') e.addEventListener(k.slice(2), props[k]);
+    else if (k === 'value') e.value = props[k];
+    else if (props[k] != null) e.setAttribute(k, props[k]);
+  }
+  (Array.isArray(kids) ? kids : [kids]).forEach(c => { if (c != null) e.append(c.nodeType ? c : document.createTextNode(c)); });
+  return e;
+}
+let toastT;
+function toast(msg, kind='') {
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast show ' + kind;
+  clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast', 2600);
+}
+function mediaUrl(p){ p=(p||'').trim(); if(!p) return ''; if(/^(https?:)?\/\//.test(p)||p[0]==='/'||p.startsWith('data:')) return p; return '/'+p.replace(/^\/+/,''); }
+
+/* ============ state ============ */
+let content = null;
+let dirty = false;
+function markDirty(){ dirty = true; const s=$('#status'); s.textContent='Unsaved changes'; s.className='status dirty'; }
+function markSaved(){ dirty = false; const s=$('#status'); s.textContent='All changes saved'; s.className='status saved'; }
+
+/* ============ api ============ */
+async function api(path, opts={}) {
+  const res = await fetch(path, Object.assign({ headers: { 'Content-Type': 'application/json' } }, opts));
+  if (!res.ok) { let m='Request failed'; try{ m=(await res.json()).error||m; }catch(e){} throw new Error(m); }
+  return res.status === 204 ? null : res.json();
+}
+async function uploadFile(file, name) {
+  const fd = new FormData();
+  if (name) fd.append('name', name); // must precede 'file' so multer sees it when naming
+  fd.append('file', file);
+  const res = await fetch('/api/upload', { method:'POST', body: fd });
+  if (!res.ok) { let m='Upload failed'; try{ m=(await res.json()).error||m; }catch(e){} throw new Error(m); }
+  return res.json(); // {path, url}
+}
+
+/* ============ reusable media picker ============ */
+// onPick(path) called with stored media path after upload (or cleared with '')
+function mediaPicker(currentPath, name, onPick, { removable=true, label='Upload / Replace' } = {}) {
+  const thumb = el('div', { class:'thumb' });
+  function paint(p){
+    thumb.innerHTML = '';
+    if (p) thumb.append(el('img', { src: mediaUrl(p) }));
+    else thumb.append(el('span', { class:'empty', text:'No photo' }));
+  }
+  paint(currentPath);
+  const fileInput = el('input', { type:'file', accept:'image/*', class:'hidden', onchange: async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const status = el('span', { class:'uploading', text:'Uploading…' });
+    actions.append(status);
+    try {
+      const r = await uploadFile(f, name);
+      paint(r.path); onPick(r.path); markDirty(); toast('Photo uploaded', 'ok');
+    } catch (err) { toast(err.message, 'err'); }
+    finally { status.remove(); fileInput.value=''; }
+  }});
+  const actions = el('div', { class:'media-actions' }, [
+    el('button', { class:'btn btn-sm', type:'button', onclick:()=>fileInput.click() }, label),
+    removable ? el('button', { class:'btn btn-sm btn-danger', type:'button', onclick:()=>{ paint(''); onPick(''); markDirty(); } }, 'Remove') : null,
+    fileInput
+  ]);
+  return el('div', { class:'media-row' }, [thumb, actions]);
+}
+
+/* small bound text field */
+function textField(labelTxt, value, onInput, { area=false, ph='', hint='' } = {}) {
+  const input = area
+    ? el('textarea', { value: value||'', placeholder: ph, oninput:(e)=>{ onInput(e.target.value); markDirty(); } })
+    : el('input', { type:'text', value: value||'', placeholder: ph, oninput:(e)=>{ onInput(e.target.value); markDirty(); } });
+  return el('div', { class:'field' }, [ el('label', { text: labelTxt }), input, hint?el('p',{class:'hint',text:hint}):null ]);
+}
+
+/* bound dropdown field */
+function selectField(labelTxt, value, options, onInput, { hint='' } = {}) {
+  const sel = el('select', { onchange:(e)=>{ onInput(e.target.value); markDirty(); } },
+    options.map(o => el('option', { value:o, ...(o===value?{selected:'selected'}:{}) }, o)));
+  sel.value = value || (options[0] || '');
+  return el('div', { class:'field' }, [ el('label', { text: labelTxt }), sel, hint?el('p',{class:'hint',text:hint}):null ]);
+}
+
+/* combo field — pick from suggestions OR type a new value */
+let _comboN = 0;
+function comboField(labelTxt, value, suggestions, onInput, { ph='', hint='' } = {}) {
+  const id = 'dl' + (++_comboN);
+  const dl = el('datalist', { id }, [...new Set((suggestions||[]).filter(Boolean))].map(s => el('option', { value:s })));
+  const input = el('input', { type:'text', value: value||'', placeholder: ph, list:id, autocomplete:'off', oninput:(e)=>{ onInput(e.target.value); markDirty(); } });
+  return el('div', { class:'field' }, [ el('label', { text: labelTxt }), input, dl, hint?el('p',{class:'hint',text:hint}):null ]);
+}
+
+/* ============ panels ============ */
+function renderHero() {
+  const p = $('#panel-hero'); p.innerHTML='';
+  p.append(el('p',{class:'intro',text:'The full-screen slideshow at the top of the home page. Drag-free reorder with the ↑ ↓ buttons. Recommended: wide landscape photos (16:9).'}));
+  content.hero.slides.forEach((src, i) => {
+    const card = el('div', { class:'card' });
+    card.append(el('div',{class:'sectionhead'},[
+      el('h3',{text:'Slide '+(i+1)}),
+      el('div',{},[
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===0,onclick:()=>{ move(content.hero.slides,i,-1); markDirty(); renderHero(); }},'↑'),
+        ' ',
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===content.hero.slides.length-1,onclick:()=>{ move(content.hero.slides,i,1); markDirty(); renderHero(); }},'↓'),
+        ' ',
+        el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ content.hero.slides.splice(i,1); markDirty(); renderHero(); }},'Delete slide')
+      ])
+    ]));
+    card.append(mediaPicker(src,'hero',(path)=>{ if(path) content.hero.slides[i]=path; }));
+    p.append(card);
+  });
+  p.append(el('button',{class:'btn',type:'button',onclick:()=>{ content.hero.slides.push(''); markDirty(); renderHero(); openUpload('#panel-hero'); }},'+ Add slide'));
+}
+
+function renderFeatured() {
+  const p = $('#panel-featured'); p.innerHTML='';
+  p.append(el('p',{class:'intro',text:'The "Featured" center-stage carousel. Each card shows a photo, a title and a caption line.'}));
+  content.featured.forEach((f, i) => {
+    const card = el('div', { class:'card' });
+    card.append(el('div',{class:'sectionhead'},[
+      el('h3',{text:'Card '+(i+1)}),
+      el('div',{},[
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===0,onclick:()=>{ move(content.featured,i,-1); markDirty(); renderFeatured(); }},'↑'),
+        ' ',
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===content.featured.length-1,onclick:()=>{ move(content.featured,i,1); markDirty(); renderFeatured(); }},'↓'),
+        ' ',
+        el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ content.featured.splice(i,1); markDirty(); renderFeatured(); }},'Delete')
+      ])
+    ]));
+    card.append(mediaPicker(f.img,'featured',(path)=>{ f.img=path; }));
+    card.append(el('div',{class:'row',style:'margin-top:14px'},[
+      textField('Title', f.title, v=>f.title=v, {ph:'e.g. BMW M4 Competition'}),
+      textField('Caption', f.sub, v=>f.sub=v, {ph:'e.g. Speed Yellow · VENOX Valvetronic'})
+    ]));
+    p.append(card);
+  });
+  p.append(el('button',{class:'btn',type:'button',onclick:()=>{ content.featured.push({title:'',sub:'',img:''}); markDirty(); renderFeatured(); }},'+ Add card'));
+}
+
+function renderSystems() {
+  const p = $('#panel-systems'); p.innerHTML='';
+  p.append(el('p',{class:'intro',text:'The "Three Systems. One Standard." product line cards on the home page.'}));
+  content.systems.forEach((s) => {
+    const card = el('div', { class:'card' });
+    card.append(el('h3',{text:s.title||'System card'}));
+    card.append(el('p',{class:'meta',text:s.num||''}));
+    card.append(mediaPicker(s.img,'system',(path)=>{ s.img=path; }));
+    card.append(el('div',{class:'row',style:'margin-top:14px'},[
+      textField('Eyebrow / number', s.num, v=>s.num=v, {ph:'e.g. 01 / VALVETRONIC'}),
+      textField('Title', s.title, v=>s.title=v, {ph:'e.g. VENOX Valvetronic'})
+    ]));
+    card.append(textField('Description', s.desc, v=>s.desc=v, {area:true}));
+    p.append(card);
+  });
+}
+
+function renderModels() {
+  const p = $('#panel-models'); p.innerHTML='';
+  p.append(el('p',{class:'intro',text:'Each model appears in the "Find Your Fit" grid and opens a detail subpage. The first photo is the grid thumbnail; all photos appear in the detail slider. The review video accepts a YouTube link or an .mp4 URL.'}));
+  // suggestions for the Year/Engine comboboxes — collected from every model you've added
+  const yearSuggestions = [...new Set(content.models.map(x=>x.year).filter(Boolean))];
+  const engineSuggestions = [...new Set(content.models.map(x=>x.engine).filter(Boolean))];
+  content.models.forEach((m, i) => {
+    const card = el('div', { class:'card' });
+    card.append(el('div',{class:'sectionhead'},[
+      el('h3',{text:(m.brand?m.brand+' — ':'')+(m.title||'Model')}),
+      el('div',{},[
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===0,onclick:()=>{ move(content.models,i,-1); markDirty(); renderModels(); }},'↑'),
+        ' ',
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===content.models.length-1,onclick:()=>{ move(content.models,i,1); markDirty(); renderModels(); }},'↓'),
+        ' ',
+        el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ if(confirm('Delete this model?')){ content.models.splice(i,1); markDirty(); renderModels(); } }},'Delete')
+      ])
+    ]));
+
+    // photo gallery
+    card.append(el('label',{class:'',style:'display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ash);margin-bottom:8px',text:'Photos (first = grid thumbnail)'}));
+    if(!Array.isArray(m.images)) m.images=[];
+    const gallery = el('div',{class:'gallery'});
+    m.images.forEach((src, gi) => {
+      const item = el('div',{class:'gitem'},[
+        el('div',{class:'thumb'},[ el('img',{src:mediaUrl(src)}), gi===0?el('span',{class:'badge',text:'Thumbnail'}):null ]),
+        el('button',{class:'btn btn-sm btn-danger rm',type:'button',onclick:()=>{ m.images.splice(gi,1); markDirty(); renderModels(); }},'✕')
+      ]);
+      gallery.append(item);
+    });
+    const addSlot = el('label',{class:'slot'},'+ Add photo');
+    const addInput = el('input',{type:'file',accept:'image/*',class:'hidden',onchange:async(e)=>{
+      const f=e.target.files[0]; if(!f) return;
+      addSlot.textContent='Uploading…';
+      try{ const r=await uploadFile(f, 'model-'+(m.id||'x')); m.images.push(r.path); markDirty(); renderModels(); toast('Photo added','ok'); }
+      catch(err){ toast(err.message,'err'); addSlot.textContent='+ Add photo'; }
+    }});
+    addSlot.append(addInput);
+    gallery.append(addSlot);
+    card.append(gallery);
+
+    // fields
+    const brandList = ((content.search && content.search.brands) || []);
+    let brandOpts;
+    if (m.brand && !brandList.some(b => b.toLowerCase() === m.brand.toLowerCase())) {
+      brandOpts = [m.brand].concat(brandList);           // current value not in list — keep it selectable
+    } else if (m.brand) {
+      brandOpts = [m.brand].concat(brandList.filter(b => b.toLowerCase() !== m.brand.toLowerCase())); // dedupe casing
+    } else {
+      brandOpts = brandList.slice();
+    }
+    const MATERIALS = ['Stainless Steel', 'Titanium'];
+    const matOpts = MATERIALS.slice();
+    if (m.mat && matOpts.indexOf(m.mat) < 0) matOpts.unshift(m.mat);
+    card.append(el('div',{class:'row',style:'margin-top:16px'},[
+      selectField('Brand', m.brand, brandOpts, v=>m.brand=v, {hint:'Choose from the Brand list (edit it on the Search filters tab).'}),
+      textField('Title', m.title, v=>m.title=v, {ph:'e.g. G82 M4 Exhaust'})
+    ]));
+    card.append(el('div',{class:'row'},[
+      textField('Subtitle', m.sub, v=>m.sub=v, {ph:'e.g. M-Performance Valvetronic Exhaust System'}),
+      textField('Part number', m.pn, v=>m.pn=v, {ph:'PN — …'})
+    ]));
+    card.append(el('div',{class:'row'},[
+      comboField('Year / spec line', m.year, yearSuggestions, v=>m.year=v, {ph:'e.g. 2024– or 3.0L S58', hint:'Pick a value you’ve used, or type a new one.'}),
+      comboField('Engine', m.engine, engineSuggestions, v=>m.engine=v, {ph:'e.g. 3.0L S58 Twin-Turbo', hint:'Pick or type.'}),
+      selectField('Material', m.mat||'Stainless Steel', matOpts, v=>{ m.mat=v; m.series='Venox '+v; }, {hint:'Drives the Series filter in the Models search.'})
+    ]));
+    card.append(textField('Description', m.desc, v=>m.desc=v, {area:true}));
+    card.append(el('div',{class:'row'},[
+      textField('Review quote', m.review, v=>m.review=v, {area:true}),
+      textField('Reviewer', m.reviewer, v=>m.reviewer=v, {ph:'— Name, Car'})
+    ]));
+    card.append(textField('Review video URL', m.video, v=>m.video=v, {ph:'https://youtu.be/… or https://…/clip.mp4', hint:'Leave blank to show a placeholder. YouTube links and direct .mp4/.webm URLs both work.'}));
+    p.append(card);
+  });
+  p.append(el('button',{class:'btn',type:'button',onclick:()=>{
+    const id='model'+Date.now().toString(36);
+    content.models.push({id,brand:'',title:'New model',sub:'',pn:'',engine:'',year:'',mat:'Stainless Steel',valve:'Valvetronic',series:'Venox Stainless Steel',desc:'',review:'',reviewer:'',images:[],video:''});
+    markDirty(); renderModels();
+  }},'+ Add model'));
+}
+
+function renderSite() {
+  const p = $('#panel-site'); p.innerHTML='';
+  p.append(el('p',{class:'intro',text:'Global contact details used by the quote form and footer.'}));
+  const card = el('div',{class:'card'});
+  card.append(el('div',{class:'row'},[
+    textField('WhatsApp number', content.site.whatsapp, v=>content.site.whatsapp=v, {ph:'60102192863', hint:'Country code + number, digits only (no + or spaces).'}),
+    textField('Email', content.site.email, v=>content.site.email=v, {ph:'duckitmotorsport@gmail.com'})
+  ]));
+  p.append(card);
+  const note=el('div',{class:'card'});
+  note.append(el('h3',{text:'Logo'}));
+  note.append(el('p',{class:'meta',text:'Shown in the header and footer.'}));
+  note.append(mediaPicker(content.site.logo,'logo',(path)=>{ content.site.logo=path; }, {removable:false}));
+  p.append(note);
+}
+
+function move(arr,i,d){ const j=i+d; if(j<0||j>=arr.length) return; const t=arr[i]; arr[i]=arr[j]; arr[j]=t; }
+
+/* editable string list (brands / series) */
+function listEditor(arr, { ph='', onChange } = {}) {
+  const wrap = el('div', {});
+  function redraw(){
+    wrap.innerHTML='';
+    arr.forEach((val, i) => {
+      const input = el('input', { type:'text', value: val, placeholder: ph, oninput:(e)=>{ arr[i]=e.target.value; markDirty(); if(onChange) onChange(); } });
+      const rowEl = el('div', { style:'display:flex;gap:8px;align-items:center;margin-bottom:8px' }, [
+        el('div',{style:'flex:1'},[input]),
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===0,onclick:()=>{ move(arr,i,-1); markDirty(); redraw(); if(onChange)onChange(); }},'↑'),
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===arr.length-1,onclick:()=>{ move(arr,i,1); markDirty(); redraw(); if(onChange)onChange(); }},'↓'),
+        el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ arr.splice(i,1); markDirty(); redraw(); if(onChange)onChange(); }},'✕')
+      ]);
+      wrap.append(rowEl);
+    });
+    wrap.append(el('button',{class:'btn btn-sm',type:'button',onclick:()=>{ arr.push(''); markDirty(); redraw(); }},'+ Add'));
+  }
+  redraw();
+  return wrap;
+}
+
+function renderSearch(){
+  const p = $('#panel-search'); p.innerHTML='';
+  content.search = content.search || {};
+  content.search.series = content.search.series || [];
+  content.search.brands = content.search.brands || [];
+  p.append(el('p',{class:'intro',html:'These power the <b>Search bar</b> at the top of the Models page. The <b>Model</b> dropdown there is built automatically from your models, so it always stays in sync — no editing needed here.'}));
+
+  const c1 = el('div',{class:'card'});
+  c1.append(el('h3',{text:'Series options'}));
+  c1.append(el('p',{class:'meta',text:'Each model is tagged with one of these (set per-model on the Models tab).'}));
+  c1.append(listEditor(content.search.series, { ph:'e.g. Venox Titanium' }));
+  p.append(c1);
+
+  const c2 = el('div',{class:'card'});
+  c2.append(el('h3',{text:'Brand options'}));
+  c2.append(el('p',{class:'meta',text:'Shown in the Brand dropdown. A model appears under a brand when its Brand field contains that name (e.g. brand "BMW M" matches "BMW").'}));
+  c2.append(listEditor(content.search.brands, { ph:'e.g. NISSAN' }));
+  p.append(c2);
+}
+
+function renderDealers(){
+  const p = $('#panel-dealers'); p.innerHTML='';
+  content.dealers = content.dealers || [];
+  p.append(el('p',{class:'intro',text:'Your authorised dealers / stockists. These appear in the "Where to Buy" block on the home page. Add as many as you like.'}));
+  content.dealers.forEach((d, i) => {
+    const card = el('div', { class:'card' });
+    card.append(el('div',{class:'sectionhead'},[
+      el('h3',{text:d.name||('Dealer '+(i+1))}),
+      el('div',{},[
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===0,onclick:()=>{ move(content.dealers,i,-1); markDirty(); renderDealers(); }},'↑'),
+        ' ',
+        el('button',{class:'btn btn-sm',type:'button',disabled:i===content.dealers.length-1,onclick:()=>{ move(content.dealers,i,1); markDirty(); renderDealers(); }},'↓'),
+        ' ',
+        el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ if(confirm('Remove this dealer?')){ content.dealers.splice(i,1); markDirty(); renderDealers(); } }},'Delete')
+      ])
+    ]));
+    card.append(el('div',{class:'row'},[
+      textField('Shop name', d.name, v=>d.name=v, {ph:'e.g. Duckit Motorsport'}),
+      textField('Contact', d.contact, v=>d.contact=v, {ph:'e.g. +60 10-219 2863 or email', hint:'A phone number or email becomes a tap-to-call / email link on the site.'})
+    ]));
+    card.append(textField('Address', d.address, v=>d.address=v, {area:true, ph:'Street, city, state, country'}));
+    p.append(card);
+  });
+  p.append(el('button',{class:'btn',type:'button',onclick:()=>{ content.dealers.push({name:'',address:'',contact:''}); markDirty(); renderDealers(); }},'+ Add dealer'));
+}
+
+/* ============ tabs ============ */
+function showTab(name){
+  $$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  $$('.panel').forEach(pn=>pn.classList.add('hidden'));
+  $('#panel-'+name).classList.remove('hidden');
+  ({hero:renderHero,featured:renderFeatured,systems:renderSystems,models:renderModels,dealers:renderDealers,search:renderSearch,site:renderSite})[name]();
+}
+
+/* ============ save / export ============ */
+async function save(){
+  const btn=$('#saveBtn'); btn.disabled=true; btn.textContent='Saving…';
+  try{
+    await api('/api/content',{method:'PUT',body:JSON.stringify(content)});
+    markSaved(); toast('Saved — live site updated','ok');
+  }catch(err){ toast(err.message,'err'); }
+  finally{ btn.disabled=false; btn.textContent='Save changes'; }
+}
+async function doExport(){
+  const btn=$('#exportBtn'); btn.disabled=true; btn.textContent='Exporting…';
+  try{
+    const res=await fetch('/api/export',{method:'POST'});
+    if(!res.ok) throw new Error('Export failed');
+    const blob=await res.blob();
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=(res.headers.get('Content-Disposition')||'').match(/filename="([^"]+)"/)?.[1] || 'venox-export.html';
+    document.body.append(a); a.click(); a.remove();
+    toast('Exported single-file build','ok');
+  }catch(err){ toast(err.message,'err'); }
+  finally{ btn.disabled=false; btn.textContent='Export file'; }
+}
+
+/* ============ boot ============ */
+async function loadContent(){
+  content = await api('/api/content');
+  // safety defaults
+  content.site=content.site||{}; content.hero=content.hero||{slides:[]};
+  content.hero.slides=content.hero.slides||[];
+  content.systems=content.systems||[]; content.featured=content.featured||[]; content.models=content.models||[];
+  content.dealers=content.dealers||[];
+  content.search=content.search||{}; content.search.series=content.search.series||['Venox Stainless Steel','Venox Titanium'];
+  content.search.brands=content.search.brands||['BMW','AUDI','MERCEDES-BENZ','TOYOTA GR','HONDA','PORSCHE','FERRARI','LAMBORGHINI','MCLAREN'];
+  showTab('hero'); markSaved();
+}
+function showApp(){ $('#loginView').classList.add('hidden'); $('#appView').classList.remove('hidden'); loadContent(); }
+function showLogin(){ $('#appView').classList.add('hidden'); $('#loginView').classList.remove('hidden'); $('#pw').focus(); }
+
+$('#loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault(); $('#loginErr').textContent='';
+  try{ await api('/api/login',{method:'POST',body:JSON.stringify({password:$('#pw').value})}); showApp(); }
+  catch(err){ $('#loginErr').textContent=err.message; }
+});
+$('#logoutBtn').addEventListener('click', async ()=>{ await api('/api/logout',{method:'POST'}); showLogin(); });
+$('#saveBtn').addEventListener('click', save);
+$('#reloadBtn').addEventListener('click', ()=>{ if(!dirty||confirm('Discard unsaved changes?')) loadContent(); });
+$('#exportBtn').addEventListener('click', doExport);
+$('#tabs').addEventListener('click', (e)=>{ const t=e.target.closest('.tab'); if(t) showTab(t.dataset.tab); });
+window.addEventListener('beforeunload', (e)=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+(async function init(){
+  try{ const s=await api('/api/session'); s.authed?showApp():showLogin(); }
+  catch(e){ showLogin(); }
+})();
+function openUpload(){ /* placeholder for future auto-open */ }
+</script>
+</body>
+</html>

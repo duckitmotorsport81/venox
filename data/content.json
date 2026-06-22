@@ -1,0 +1,218 @@
+{
+  "site": {
+    "brand": "VENOX",
+    "whatsapp": "60102192863",
+    "email": "duckitmotorsport@gmail.com",
+    "logo": "media/logo.png"
+  },
+  "hero": {
+    "slides": [
+      "media/hero-1.jpg",
+      "media/hero-2.jpg",
+      "media/hero-3.jpg",
+      "media/hero-4.jpg",
+      "media/hero-1782114179891-77e9b6.jpg",
+      "media/hero-1782109551434-2fc5ac.jpg"
+    ]
+  },
+  "systems": [
+    {
+      "num": "01 / VALVETRONIC",
+      "title": "VENOX Valvetronic",
+      "desc": "Electronically controlled exhaust valves. Open them for full-volume aggression, close them for a refined cruise — switched from the cabin or a wireless remote.",
+      "img": "media/system-1.jpg"
+    },
+    {
+      "num": "02 / STAINLESS",
+      "title": "VENOX Stainless Steel",
+      "desc": "Premium T304 stainless steel piping, mandrel-bent and TIG-welded for a deep, resonant tone. Tough, corrosion-resistant, and built to take the heat for the long haul.",
+      "img": "media/system-2.jpg"
+    },
+    {
+      "num": "03 / CAT-BACK",
+      "title": "VENOX Cat-Back",
+      "desc": "Mandrel-bent 304 stainless cat-back systems. A serious bump in flow and note with a bolt-on install and a volume that stays neighbour-friendly on start-up.",
+      "img": "media/system-3.jpg"
+    }
+  ],
+  "featured": [
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Speed Yellow · VENOX Valvetronic",
+      "img": "media/featured-1.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Ice Blue · VENOX Stainless Steel",
+      "img": "media/featured-2.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Nardo Grey · VENOX Cat-Back",
+      "img": "media/featured-3.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "M Livery · VENOX Valvetronic",
+      "img": "media/featured-4.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Lime Green · VENOX Valvetronic",
+      "img": "media/featured-5.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Gloss Black · VENOX Stainless Steel",
+      "img": "media/featured-6.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Brooklyn Grey · VENOX Cat-Back",
+      "img": "media/featured-7.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Matte Green · VENOX Stainless Steel",
+      "img": "media/featured-8.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Alpine White · VENOX Valvetronic",
+      "img": "media/featured-9.jpg"
+    },
+    {
+      "title": "BMW M4 Competition",
+      "sub": "Stone Grey · VENOX Cat-Back",
+      "img": "media/featured-10.jpg"
+    }
+  ],
+  "models": [
+    {
+      "id": "gt3rs",
+      "brand": "Porsche",
+      "title": "992.1 GT3 RS Exhaust",
+      "sub": "OPF / Non-OPF Valvetronic Exhaust System",
+      "pn": "PN — add part number",
+      "engine": "4.0L Flat-Six",
+      "year": "2021–",
+      "mat": "Stainless Steel",
+      "valve": "Valvetronic",
+      "desc": "A full Valvetronic system engineered for the 992.1 GT3 RS. Mandrel-bent T304 stainless with electronically controlled valves — track-day volume on demand, civil on the cruise. Supplied, fitted and tuned for fit at Duckit Motorsport.",
+      "review": "FI Exhaust crushed it. Sounds exactly how it should — straight from the factory. Open valve, closed valve, it's all there.",
+      "reviewer": "— Hunter L., 992.1 GT3 RS",
+      "images": [],
+      "video": "",
+      "series": "Venox Stainless Steel"
+    },
+    {
+      "id": "g82m4",
+      "brand": "BMW M",
+      "title": "G82 M4 Exhaust M-Performance Ver",
+      "sub": "M-Performance Valvetronic Exhaust System",
+      "pn": "PN — add part number",
+      "engine": "3.0L S58 Twin-Turbo",
+      "year": "3.0L S58",
+      "mat": "Stainless Steel",
+      "valve": "Valvetronic",
+      "desc": "M-Performance-style Valvetronic system for the G82 M4 (S58). Deep, resonant tone with cabin-switchable valves and tip options to match the build. Bolt-on fit, dialled in on-car.",
+      "review": "Tone is exactly what the S58 needed. Quiet on cold start, savage when you open it up.",
+      "reviewer": "— Faiz R., G82 M4",
+      "images": [],
+      "video": "",
+      "series": "Venox Stainless Steel"
+    },
+    {
+      "id": "f96x6m",
+      "brand": "BMW M",
+      "title": "F96 X6M / Competition LCI Exhaust",
+      "sub": "Valvetronic Cat-Back Exhaust System",
+      "pn": "PN — add part number",
+      "engine": "4.4L S63 Twin-Turbo V8",
+      "year": "2024–",
+      "mat": "Stainless Steel",
+      "valve": "Valvetronic",
+      "desc": "Valvetronic cat-back for the F96 X6M / Competition LCI. Big, refined V8 character with full valve control for the daily, opened up for the back roads.",
+      "review": "Big V8 character without waking the neighbours. Fit and finish were spot on.",
+      "reviewer": "— Add reviewer, F96 X6M",
+      "images": [],
+      "video": "",
+      "series": "Venox Stainless Steel"
+    },
+    {
+      "id": "cayenne",
+      "brand": "Porsche",
+      "title": "Cayenne Coupe Exhaust",
+      "sub": "Valvetronic Exhaust System",
+      "pn": "PN — add part number",
+      "engine": "V8 Twin-Turbo",
+      "year": "2019–",
+      "mat": "Stainless Steel",
+      "valve": "Valvetronic",
+      "desc": "Valvetronic system for the Cayenne Coupe. Quad-tip presence and a deeper note without losing the everyday manners an SUV needs.",
+      "review": "Turned a quiet SUV into something with real presence. Quad tips look factory.",
+      "reviewer": "— Add reviewer, Cayenne Coupe",
+      "images": [],
+      "video": "",
+      "series": "Venox Stainless Steel"
+    },
+    {
+      "id": "supra",
+      "brand": "Toyota",
+      "title": "GR Supra A90 Exhaust",
+      "sub": "Valvetronic Cat-Back Exhaust System",
+      "pn": "PN — add part number",
+      "engine": "3.0L B58 Turbo",
+      "year": "3.0L B58",
+      "mat": "Stainless Steel",
+      "valve": "Valvetronic",
+      "desc": "Valvetronic cat-back for the GR Supra (A90, B58). Wakes up the straight-six with a sharper, fuller tone and on-demand volume from the cabin.",
+      "review": "Woke the B58 right up. Sharper, fuller, and I can still keep it civil for the daily.",
+      "reviewer": "— Add reviewer, GR Supra A90",
+      "images": [],
+      "video": "",
+      "series": "Venox Stainless Steel"
+    },
+    {
+      "id": "g87m2",
+      "brand": "BMW M",
+      "title": "G87 M2 Exhaust",
+      "sub": "Valvetronic Cat-Back Exhaust System",
+      "pn": "PN — add part number",
+      "engine": "3.0L S58 Twin-Turbo",
+      "year": "3.0L S58",
+      "mat": "Stainless Steel",
+      "valve": "Valvetronic",
+      "desc": "Valvetronic cat-back for the G87 M2 (S58). Mandrel-bent T304 with quad tips — aggressive when you want it, neighbour-friendly on cold start.",
+      "review": "Aggressive when I want it, neighbour-friendly on start-up. Exactly as described.",
+      "reviewer": "— Adrian L., G87 M2",
+      "images": [],
+      "video": "",
+      "series": "Venox Stainless Steel"
+    }
+  ],
+  "search": {
+    "series": [
+      "Venox Stainless Steel",
+      "Venox Titanium"
+    ],
+    "brands": [
+      "BMW",
+      "AUDI",
+      "MERCEDES-BENZ",
+      "TOYOTA GR",
+      "HONDA",
+      "PORSCHE",
+      "FERRARI",
+      "LAMBORGHINI",
+      "MCLAREN"
+    ]
+  },
+  "dealers": [
+    {
+      "name": "Duckit Motorsport",
+      "address": "Puchong, Selangor, Malaysia",
+      "contact": "+60 10-219 2863"
+    }
+  ]
+}
