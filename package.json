@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "node scripts/build.js",
+    "publish-site": "node scripts/publish.js",
     "migrate": "node scripts/migrate.js",
     "dev": "node server.js"
   },
