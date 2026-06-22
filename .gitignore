@@ -5,3 +5,4 @@ exports/
 .DS_Store
 Thumbs.db
 .claude/
+dist/
