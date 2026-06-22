@@ -90,6 +90,8 @@ function videoType(u) {
   u = (u || '').toLowerCase();
   if (/\.webm(\?|$)/.test(u)) return 'video/webm';
   if (/\.ogv(\?|$)/.test(u)) return 'video/ogg';
+  if (/\.(mov|qt)(\?|$)/.test(u)) return 'video/quicktime';
+  if (/\.m4v(\?|$)/.test(u)) return 'video/x-m4v';
   return 'video/mp4';
 }
 function renderHero(c) {
@@ -208,10 +210,11 @@ const storage = multer.diskStorage({
     cb(null, `${base}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}${ext}`);
   }
 });
-const ALLOWED = /^(image\/(jpeg|png|webp|gif|svg\+xml)|video\/(mp4|webm))$/;
+// accept any image or video type (mp4, webm, mov/quicktime, m4v, ogg, …)
+const ALLOWED = /^(image|video)\//;
 const upload = multer({
   storage,
-  limits: { fileSize: 100 * 1024 * 1024 },
+  limits: { fileSize: 200 * 1024 * 1024 },
   fileFilter: (req, file, cb) => cb(null, ALLOWED.test(file.mimetype))
 });
 
@@ -260,7 +263,7 @@ app.post('/api/upload', requireAuth, (req, res) => {
 });
 
 // export single self-contained file (all media inlined as base64)
-const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml', mp4: 'video/mp4', webm: 'video/webm' };
+const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml', mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', qt: 'video/quicktime', m4v: 'video/x-m4v', ogv: 'video/ogg' };
 function inlineMedia(html) {
   const cache = {};
   return html.replace(/\/media\/([A-Za-z0-9._-]+)/g, (m, file) => {

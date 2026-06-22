@@ -269,7 +269,7 @@ function heroVideoControls(slide){
     const urlInput = el('input',{type:'text',value:slide.video||'',placeholder:'…or paste a .mp4 / .webm URL',
       oninput:(e)=>{ slide.video=e.target.value.trim(); markDirty(); }});
     wrap.append(el('div',{class:'field',style:'margin-bottom:0'},[urlInput]));
-    wrap.append(el('p',{class:'hint',text:'If set, the video plays muted on loop behind this slide (same dark overlay). The photo above becomes the poster / fallback. Keep clips short and compressed (≈ under 15 MB) for fast loading.'}));
+    wrap.append(el('p',{class:'hint',html:'If set, the video plays muted on loop behind this slide (same dark overlay). The photo above becomes the poster / fallback. Keep clips short and compressed (≈ under 15 MB). <b>Tip:</b> .mp4 (H.264) plays on every browser; .mov from an iPhone often won’t play in Chrome — convert it to .mp4 for best results (the photo will show as fallback otherwise).'}));
   }
   redraw();
   return wrap;
