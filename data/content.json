@@ -7,12 +7,30 @@
   },
   "hero": {
     "slides": [
-      "media/hero-1.jpg",
-      "media/hero-2.jpg",
-      "media/hero-3.jpg",
-      "media/hero-4.jpg",
-      "media/hero-1782114179891-77e9b6.jpg",
-      "media/hero-1782109551434-2fc5ac.jpg"
+      {
+        "image": "media/hero-1.jpg",
+        "video": ""
+      },
+      {
+        "image": "media/hero-2.jpg",
+        "video": ""
+      },
+      {
+        "image": "media/hero-3.jpg",
+        "video": ""
+      },
+      {
+        "image": "media/hero-4.jpg",
+        "video": ""
+      },
+      {
+        "image": "media/hero-1782114179891-77e9b6.jpg",
+        "video": ""
+      },
+      {
+        "image": "media/hero-1782109551434-2fc5ac.jpg",
+        "video": ""
+      }
     ]
   },
   "systems": [

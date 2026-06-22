@@ -64,7 +64,7 @@ const logo = cssVarUrl('logo');
 if (logo) content.site.logo = saveDataUrl(logo, 'logo');
 ['hero', 'hero2', 'hero3', 'hero4', 'hero5'].forEach((v, i) => {
   const u = cssVarUrl(v);
-  if (u) content.hero.slides.push(saveDataUrl(u, 'hero-' + (i + 1)));
+  if (u) content.hero.slides.push({ image: saveDataUrl(u, 'hero-' + (i + 1)), video: '' });
 });
 
 /* ---------- 3 system cards ---------- */

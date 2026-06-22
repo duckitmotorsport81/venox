@@ -138,6 +138,7 @@ img{display:block;max-width:100%}
 .slide-ph .tag{position:absolute;bottom:26px;right:28px;font-family:var(--data);font-size:.66rem;
   letter-spacing:.2em;text-transform:uppercase;color:var(--ash-dim)}
 .slide-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slide-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .s1{background:var(--hero) center/cover no-repeat}
 .s2{background:var(--hero2) center/cover no-repeat}
 .s3{background:var(--hero3) center/cover no-repeat}
@@ -879,12 +880,21 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
     dotsWrap.appendChild(d);
   });
   var dots = Array.prototype.slice.call(dotsWrap.children);
+  function syncVideos(){
+    slides.forEach(function(sl){
+      var v = sl.querySelector('video');
+      if(!v) return;
+      if(sl.classList.contains('is-active')){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+      else { v.pause(); }
+    });
+  }
   function go(i, manual){
     slides[cur].classList.remove('is-active');
     dots[cur].classList.remove('on');
     cur = (i + slides.length) % slides.length;
     slides[cur].classList.add('is-active');
     dots[cur].classList.add('on');
+    syncVideos();
     if(manual) restart();
   }
   function next(manual){ go(cur+1, manual); }
@@ -899,6 +909,7 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
   var hero = document.getElementById('top');
   hero.addEventListener('mouseenter', function(){ if(timer){ clearInterval(timer); } });
   hero.addEventListener('mouseleave', start);
+  syncVideos();
   start();
 
   // scroll reveal

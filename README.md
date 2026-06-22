@@ -6,7 +6,8 @@ videos and text — no code editing required.
 
 You can edit:
 
-- **Hero slides** — the full-screen slideshow at the top of the home page
+- **Hero slides** — the full-screen slideshow at the top of the home page; each slide can be
+  a photo and/or a muted looping **background video** (the photo acts as the poster/fallback)
 - **Featured carousel** — the rotating "Featured" builds
 - **System cards** — the three "Three Systems. One Standard." product lines
 - **Models** — every car in the "Find Your Fit" grid and its detail subpage

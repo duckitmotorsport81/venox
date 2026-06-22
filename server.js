@@ -85,12 +85,25 @@ function url(p) {
   return '/' + p.replace(/^\/+/, '');
 }
 
+function slideObj(s) { return (typeof s === 'string') ? { image: s, video: '' } : (s || {}); }
+function videoType(u) {
+  u = (u || '').toLowerCase();
+  if (/\.webm(\?|$)/.test(u)) return 'video/webm';
+  if (/\.ogv(\?|$)/.test(u)) return 'video/ogg';
+  return 'video/mp4';
+}
 function renderHero(c) {
   const slides = (c.hero && c.hero.slides) || [];
   if (!slides.length) return '<div class="slide is-active"></div>';
-  return slides.map((src, i) =>
-    `<div class="slide${i === 0 ? ' is-active' : ''}" style="background-image:url('${url(src)}')"></div>`
-  ).join('\n    ');
+  return slides.map((raw, i) => {
+    const s = slideObj(raw);
+    const cls = `slide${i === 0 ? ' is-active' : ''}`;
+    if (s.video) {
+      const poster = s.image ? ` poster="${url(s.image)}"` : '';
+      return `<div class="${cls}"><video class="slide-video" autoplay muted loop playsinline preload="auto"${poster}><source src="${url(s.video)}" type="${videoType(s.video)}"></video></div>`;
+    }
+    return `<div class="${cls}" style="background-image:url('${url(s.image)}')"></div>`;
+  }).join('\n    ');
 }
 function renderSystems(c) {
   return (c.systems || []).map((s) => `

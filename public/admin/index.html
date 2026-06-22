@@ -244,10 +244,41 @@ function comboField(labelTxt, value, suggestions, onInput, { ph='', hint='' } = 
 }
 
 /* ============ panels ============ */
+function heroVideoControls(slide){
+  const wrap = el('div', { style:'margin-top:16px;border-top:1px solid var(--line);padding-top:14px' });
+  function redraw(){
+    wrap.innerHTML='';
+    wrap.append(el('label',{style:'display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ash);margin-bottom:8px',text:'Background video (optional)'}));
+    if(slide.video){
+      const v = el('video',{src:mediaUrl(slide.video),loop:'',autoplay:'',playsinline:'',
+        style:'width:220px;aspect-ratio:16/9;border-radius:8px;border:1px solid var(--line-2);background:#000;display:block;margin-bottom:10px'});
+      v.muted=true;
+      wrap.append(v);
+    }
+    const fileInput = el('input',{type:'file',accept:'video/mp4,video/webm,video/*',class:'hidden',onchange:async(e)=>{
+      const f=e.target.files[0]; if(!f) return;
+      const st=el('span',{class:'uploading',text:'Uploading video…'}); wrap.append(st);
+      try{ const r=await uploadFile(f,'hero-video'); slide.video=r.path; markDirty(); redraw(); toast('Video uploaded','ok'); }
+      catch(err){ toast(err.message,'err'); } finally{ st.remove(); }
+    }});
+    wrap.append(el('div',{style:'display:flex;gap:8px;margin-bottom:10px'},[
+      el('button',{class:'btn btn-sm',type:'button',onclick:()=>fileInput.click()},slide.video?'Replace video':'Upload video'),
+      slide.video?el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ slide.video=''; markDirty(); redraw(); }},'Remove video'):null,
+      fileInput
+    ]));
+    const urlInput = el('input',{type:'text',value:slide.video||'',placeholder:'…or paste a .mp4 / .webm URL',
+      oninput:(e)=>{ slide.video=e.target.value.trim(); markDirty(); }});
+    wrap.append(el('div',{class:'field',style:'margin-bottom:0'},[urlInput]));
+    wrap.append(el('p',{class:'hint',text:'If set, the video plays muted on loop behind this slide (same dark overlay). The photo above becomes the poster / fallback. Keep clips short and compressed (≈ under 15 MB) for fast loading.'}));
+  }
+  redraw();
+  return wrap;
+}
+
 function renderHero() {
   const p = $('#panel-hero'); p.innerHTML='';
-  p.append(el('p',{class:'intro',text:'The full-screen slideshow at the top of the home page. Drag-free reorder with the ↑ ↓ buttons. Recommended: wide landscape photos (16:9).'}));
-  content.hero.slides.forEach((src, i) => {
+  p.append(el('p',{class:'intro',text:'The full-screen slideshow at the top of the home page. Each slide can be a photo and/or a background video. Reorder with ↑ ↓. Recommended: wide landscape (16:9).'}));
+  content.hero.slides.forEach((slide, i) => {
     const card = el('div', { class:'card' });
     card.append(el('div',{class:'sectionhead'},[
       el('h3',{text:'Slide '+(i+1)}),
@@ -259,10 +290,12 @@ function renderHero() {
         el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ content.hero.slides.splice(i,1); markDirty(); renderHero(); }},'Delete slide')
       ])
     ]));
-    card.append(mediaPicker(src,'hero',(path)=>{ if(path) content.hero.slides[i]=path; }));
+    card.append(el('label',{style:'display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ash);margin-bottom:8px',text:'Photo (poster / fallback)'}));
+    card.append(mediaPicker(slide.image,'hero',(path)=>{ slide.image=path; }));
+    card.append(heroVideoControls(slide));
     p.append(card);
   });
-  p.append(el('button',{class:'btn',type:'button',onclick:()=>{ content.hero.slides.push(''); markDirty(); renderHero(); openUpload('#panel-hero'); }},'+ Add slide'));
+  p.append(el('button',{class:'btn',type:'button',onclick:()=>{ content.hero.slides.push({image:'',video:''}); markDirty(); renderHero(); }},'+ Add slide'));
 }
 
 function renderFeatured() {
@@ -511,7 +544,7 @@ async function loadContent(){
   content = await api('/api/content');
   // safety defaults
   content.site=content.site||{}; content.hero=content.hero||{slides:[]};
-  content.hero.slides=content.hero.slides||[];
+  content.hero.slides=(content.hero.slides||[]).map(s=> typeof s==='string' ? {image:s,video:''} : {image:(s&&s.image)||'',video:(s&&s.video)||''});
   content.systems=content.systems||[]; content.featured=content.featured||[]; content.models=content.models||[];
   content.dealers=content.dealers||[];
   content.search=content.search||{}; content.search.series=content.search.series||['Venox Stainless Steel','Venox Titanium'];
