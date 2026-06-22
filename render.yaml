@@ -1,25 +1,32 @@
-# Render.com blueprint. In Render: New → Blueprint → connect this repo.
-# A persistent disk keeps uploaded photos + content edits across deploys/restarts.
-# Disks require a paid instance type (the "free" plan has an ephemeral disk and
-# will lose uploads on restart). Starter is ~$7/mo at time of writing.
+# Render.com blueprint.  In Render: New -> Blueprint -> connect this repo.
+#
+# This is set to the FREE tier so you can try it live (incl. your own domain) at no cost.
+# Free notes: the service sleeps after ~15 min idle (first visit then takes ~50s to wake),
+# and the filesystem resets on restart/redeploy — so photo/video uploads and admin edits
+# made on the live free site are TEMPORARY (they revert to whatever is in this repo).
+#
+# ---- TO GO LIVE PERMANENTLY (keeps all uploads) ----
+# 1) change `plan: free` to `plan: starter`
+# 2) uncomment the two VENOX_DATA_DIR/VENOX_MEDIA_DIR env vars AND the `disk:` block below
+# 3) commit & push — Render re-deploys with a permanent 1 GB disk.
 services:
   - type: web
     name: venox
     runtime: node
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: node server.js
     healthCheckPath: /healthz
     envVars:
       - key: VENOX_ADMIN_PASSWORD
-        sync: false            # set this yourself in the Render dashboard
+        sync: false            # you set this in the Render dashboard at deploy time
       - key: VENOX_SESSION_SECRET
         generateValue: true    # Render generates a strong random value
-      - key: VENOX_DATA_DIR
-        value: /var/data
-      - key: VENOX_MEDIA_DIR
-        value: /var/data/media
-    disk:
-      name: venox-data
-      mountPath: /var/data
-      sizeGB: 1
+      # - key: VENOX_DATA_DIR
+      #   value: /var/data
+      # - key: VENOX_MEDIA_DIR
+      #   value: /var/data/media
+    # disk:
+    #   name: venox-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
