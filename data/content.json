@@ -101,19 +101,19 @@
       "id": "gt3rs",
       "brand": "BMW",
       "title": "G88 M2 S58",
-      "sub": "OPF / Non-OPF Valvetronic Exhaust System",
-      "pn": "PN — add part number",
+      "sub": "BMW G87 M2 - S58 Venox Full System",
+      "pn": "",
       "engine": "3.0L S58 Twin-Turbo",
-      "year": "2022",
+      "year": "2023",
       "mat": "Stainless Steel",
       "valve": "Valvetronic",
-      "desc": "A full Valvetronic system engineered for the 992.1 GT3 RS. Mandrel-bent T304 stainless with electronically controlled valves — track-day volume on demand, civil on the cruise. Supplied, fitted and tuned for fit at Duckit Motorsport.",
-      "review": "FI Exhaust crushed it. Sounds exactly how it should — straight from the factory. Open valve, closed valve, it's all there.",
-      "reviewer": "— Hunter L., 992.1 GT3 RS",
+      "desc": "Setup : \n\n- Stock Engine \n- Full CS DME Flash \n- CS Traction Flash\n- CS Steering Flash\n- CS GearBox Flash\n\n- Venox Catless Downpipe\n- Venox Midpipe \n\n",
+      "review": "",
+      "reviewer": "",
       "images": [
         "media/model-gt3rs-1782138741436-18f676.jpg"
       ],
-      "video": "",
+      "video": "https://youtu.be/jB-Xxn-ZAAc",
       "series": "Venox Stainless Steel"
     },
     {
