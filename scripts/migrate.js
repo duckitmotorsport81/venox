@@ -39,7 +39,7 @@ function imgToMedia(src, name) {
 }
 
 const content = {
-  site: { brand: 'VENOX', whatsapp: '60102192863', email: 'duckitmotorsport@gmail.com', logo: '' },
+  site: { brand: 'VENOX', whatsapp: '60102192863', email: 'duckitmotorsport@gmail.com', logo: '', youtube: '' },
   search: {
     series: ['Venox Stainless Steel', 'Venox Titanium'],
     brands: ['BMW', 'AUDI', 'MERCEDES-BENZ', 'TOYOTA GR', 'HONDA', 'PORSCHE', 'FERRARI', 'LAMBORGHINI', 'MCLAREN']

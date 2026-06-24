@@ -431,6 +431,7 @@ function renderSite() {
     textField('WhatsApp number', content.site.whatsapp, v=>content.site.whatsapp=v, {ph:'60102192863', hint:'Country code + number, digits only (no + or spaces).'}),
     textField('Email', content.site.email, v=>content.site.email=v, {ph:'duckitmotorsport@gmail.com'})
   ]));
+  card.append(textField('YouTube channel URL', content.site.youtube, v=>content.site.youtube=v, {ph:'https://youtube.com/@YourChannel', hint:'Adds a red "YouTube" button at the bottom of every model page, linking to your channel. Leave blank to hide it.'}));
   p.append(card);
   const note=el('div',{class:'card'});
   note.append(el('h3',{text:'Logo'}));

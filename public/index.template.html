@@ -452,6 +452,9 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
 .sheet-specs li span:last-child{color:var(--platinum);font-weight:600}
 .sheet-desc{color:var(--ash);line-height:1.75;margin-bottom:30px}
 .sheet-cta{display:flex;flex-wrap:wrap;gap:14px}
+.btn-youtube{background:#FF0000;border-color:#FF0000;color:#fff;display:inline-flex;align-items:center;gap:9px}
+.btn-youtube:hover{filter:brightness(1.08)}
+.btn-youtube svg{width:22px;height:auto;display:block}
 
 /* ----- detail subpage: document layout (slider + strip + review) ----- */
 .sheet-doc{max-width:920px;margin:0 auto;padding:clamp(26px,4vw,48px) var(--pad) clamp(60px,8vw,96px)}
@@ -1114,6 +1117,7 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
     <div class="sheet-cta">
       <a class="btn btn-primary" id="sheetEnquire" href="#contact">Enquire / Configure <span class="arr">→</span></a>
       <a class="btn btn-ghost" href="https://wa.me/60102192863" target="_blank" rel="noopener">WhatsApp Us</a>
+      {{YOUTUBE_CTA}}
     </div>
   </div>
 </div>
