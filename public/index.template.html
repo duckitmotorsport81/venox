@@ -1208,7 +1208,9 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
       var yt = url && ytId(url);
       if(yt){
         var f = document.createElement('iframe');
-        f.src = 'https://www.youtube.com/embed/' + yt;
+        // rel=0 limits end-screen suggestions to this channel; modestbranding/iv_load_policy
+        // reduce branding & annotations; vq=hd1080 requests high quality.
+        f.src = 'https://www.youtube.com/embed/' + yt + '?rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&color=white&vq=hd1080';
         f.title = 'Customer review video'; f.loading = 'lazy';
         f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
         f.allowFullscreen = true;
