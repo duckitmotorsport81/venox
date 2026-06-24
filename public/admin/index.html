@@ -371,12 +371,18 @@ function renderModels() {
       ]);
       gallery.append(item);
     });
-    const addSlot = el('label',{class:'slot'},'+ Add photo');
-    const addInput = el('input',{type:'file',accept:'image/*',class:'hidden',onchange:async(e)=>{
-      const f=e.target.files[0]; if(!f) return;
-      addSlot.textContent='Uploading…';
-      try{ const r=await uploadFile(f, 'model-'+(m.id||'x')); m.images.push(r.path); markDirty(); renderModels(); toast('Photo added','ok'); }
-      catch(err){ toast(err.message,'err'); addSlot.textContent='+ Add photo'; }
+    const addSlot = el('label',{class:'slot'},'+ Add photos');
+    const addInput = el('input',{type:'file',accept:'image/*',multiple:'',class:'hidden',onchange:async(e)=>{
+      const files=Array.prototype.slice.call(e.target.files); if(!files.length) return;
+      let done=0, ok=0;
+      addSlot.textContent='Uploading 0/'+files.length+'…';
+      for(const f of files){
+        try{ const r=await uploadFile(f, 'model-'+(m.id||'x')); m.images.push(r.path); ok++; }
+        catch(err){ toast('One photo failed: '+err.message,'err'); }
+        done++; addSlot.textContent='Uploading '+done+'/'+files.length+'…';
+      }
+      markDirty(); renderModels();
+      if(ok) toast(ok+' photo'+(ok===1?'':'s')+' added','ok');
     }});
     addSlot.append(addInput);
     gallery.append(addSlot);
