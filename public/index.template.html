@@ -1237,7 +1237,10 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
       elBrand.textContent = card.getAttribute('data-brand') || '';
       elTitle.innerHTML   = card.getAttribute('data-title') || '';
       elSub.textContent   = card.getAttribute('data-sub') || '';
-      elPn.textContent    = card.getAttribute('data-pn') || '';
+      var pnVal = (card.getAttribute('data-pn') || '').trim();
+      if(/add part number/i.test(pnVal)) pnVal = '';   // ignore leftover placeholder text
+      elPn.textContent = pnVal;
+      elPn.style.display = pnVal ? '' : 'none';         // hide entirely when no part number
       elDesc.textContent  = card.getAttribute('data-desc') || '';
       elMat.textContent   = card.getAttribute('data-mat') || '\u2014';
       elYear.innerHTML    = card.getAttribute('data-year') || '\u2014';
