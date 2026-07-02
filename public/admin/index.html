@@ -58,6 +58,11 @@
     padding:10px 12px;border-radius:8px;font-family:inherit;font-size:.92rem}
   .field textarea{min-height:78px;resize:vertical}
   .field input:focus,.field textarea:focus{outline:none;border-color:var(--red)}
+  .pw-wrap{position:relative}
+  .pw-wrap input{padding-right:70px}
+  .pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;
+    color:var(--red2);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;padding:6px 10px}
+  .pw-toggle:hover{text-decoration:underline}
   .hint{color:var(--dim);font-size:.78rem;margin-top:5px}
   .sectionhead{display:flex;align-items:center;justify-content:space-between;margin:6px 0 14px}
   .sectionhead h2{font-size:1.15rem}
@@ -98,7 +103,10 @@
     <p class="sub">Enter the admin password to manage site content.</p>
     <div class="field">
       <label for="pw">Password</label>
-      <input id="pw" type="password" autocomplete="current-password" required>
+      <div class="pw-wrap">
+        <input id="pw" type="password" autocomplete="current-password" required>
+        <button type="button" id="pwToggle" class="pw-toggle" aria-label="Show password">Show</button>
+      </div>
     </div>
     <button class="btn btn-primary" style="width:100%;justify-content:center" type="submit">Sign in</button>
     <p class="hint" id="loginErr" style="color:#ff8b95;margin-top:12px"></p>
@@ -575,6 +583,12 @@ $('#loginForm').addEventListener('submit', async (e)=>{
   e.preventDefault(); $('#loginErr').textContent='';
   try{ await api('/api/login',{method:'POST',body:JSON.stringify({password:$('#pw').value})}); showApp(); }
   catch(err){ $('#loginErr').textContent=err.message; }
+});
+$('#pwToggle').addEventListener('click', ()=>{
+  const inp=$('#pw'), show=inp.type==='password';
+  inp.type=show?'text':'password';
+  $('#pwToggle').textContent=show?'Hide':'Show';
+  inp.focus();
 });
 $('#logoutBtn').addEventListener('click', async ()=>{ await api('/api/logout',{method:'POST'}); showLogin(); });
 $('#saveBtn').addEventListener('click', save);
