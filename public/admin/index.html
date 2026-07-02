@@ -128,6 +128,7 @@
     <div class="tab active" data-tab="hero">Hero slides</div>
     <div class="tab" data-tab="featured">Featured carousel</div>
     <div class="tab" data-tab="systems">System cards</div>
+    <div class="tab" data-tab="sound">Sound</div>
     <div class="tab" data-tab="models">Models</div>
     <div class="tab" data-tab="dealers">Dealers</div>
     <div class="tab" data-tab="search">Search filters</div>
@@ -138,6 +139,7 @@
     <div id="panel-hero" class="panel"></div>
     <div id="panel-featured" class="panel hidden"></div>
     <div id="panel-systems" class="panel hidden"></div>
+    <div id="panel-sound" class="panel hidden"></div>
     <div id="panel-models" class="panel hidden"></div>
     <div id="panel-dealers" class="panel hidden"></div>
     <div id="panel-search" class="panel hidden"></div>
@@ -349,6 +351,46 @@ function renderSystems() {
   });
 }
 
+/* audio uploader (with a play-preview) */
+function audioPicker(current, name, onPick){
+  const wrap = el('div', {});
+  function redraw(){
+    wrap.innerHTML='';
+    if(current){
+      const a = el('audio',{src:mediaUrl(current),controls:'',style:'display:block;width:100%;max-width:380px;margin-bottom:10px'});
+      wrap.append(a);
+    } else {
+      wrap.append(el('p',{class:'meta',text:'No sound clip yet.'}));
+    }
+    const fileInput = el('input',{type:'file',accept:'audio/*',class:'hidden',onchange:async(e)=>{
+      const f=e.target.files[0]; if(!f) return;
+      const st=el('span',{class:'uploading',text:'Uploading…'}); wrap.append(st);
+      try{ const r=await uploadFile(f,'sound-'+name); current=r.path; onPick(r.path); markDirty(); redraw(); toast('Sound uploaded','ok'); }
+      catch(err){ toast(err.message,'err'); } finally{ st.remove(); }
+    }});
+    wrap.append(el('div',{style:'display:flex;gap:8px'},[
+      el('button',{class:'btn btn-sm',type:'button',onclick:()=>fileInput.click()}, current?'Replace sound':'Upload sound'),
+      current?el('button',{class:'btn btn-sm btn-danger',type:'button',onclick:()=>{ current=''; onPick(''); markDirty(); redraw(); }},'Remove'):null,
+      fileInput
+    ]));
+  }
+  redraw();
+  return wrap;
+}
+
+function renderSound(){
+  const p = $('#panel-sound'); p.innerHTML='';
+  content.sound = content.sound || {comfort:'',sport:'',track:''};
+  p.append(el('p',{class:'intro',text:'Upload a sound clip for each volume mode on the home page. When a visitor clicks Comfort / Sport / Track, its clip plays. Use short MP3 clips (a few seconds) and keep them small.'}));
+  [['comfort','Comfort'],['sport','Sport'],['track','Track']].forEach(function(pair){
+    const key=pair[0], label=pair[1];
+    const card=el('div',{class:'card'});
+    card.append(el('h3',{text:label}));
+    card.append(audioPicker(content.sound[key]||'', key, function(path){ content.sound[key]=path; }));
+    p.append(card);
+  });
+}
+
 function renderModels() {
   const p = $('#panel-models'); p.innerHTML='';
   p.append(el('p',{class:'intro',text:'Each model appears in the "Find Your Fit" grid and opens a detail subpage. The first photo is the grid thumbnail; all photos appear in the detail slider. The review video accepts a YouTube link or an .mp4 URL.'}));
@@ -528,7 +570,7 @@ function showTab(name){
   $$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
   $$('.panel').forEach(pn=>pn.classList.add('hidden'));
   $('#panel-'+name).classList.remove('hidden');
-  ({hero:renderHero,featured:renderFeatured,systems:renderSystems,models:renderModels,dealers:renderDealers,search:renderSearch,site:renderSite})[name]();
+  ({hero:renderHero,featured:renderFeatured,systems:renderSystems,sound:renderSound,models:renderModels,dealers:renderDealers,search:renderSearch,site:renderSite})[name]();
 }
 
 /* ============ save / publish / export ============ */
@@ -571,7 +613,7 @@ async function loadContent(){
   content.site=content.site||{}; content.hero=content.hero||{slides:[]};
   content.hero.slides=(content.hero.slides||[]).map(s=> typeof s==='string' ? {image:s,video:''} : {image:(s&&s.image)||'',video:(s&&s.video)||''});
   content.systems=content.systems||[]; content.featured=content.featured||[]; content.models=content.models||[];
-  content.dealers=content.dealers||[];
+  content.dealers=content.dealers||[]; content.sound=content.sound||{comfort:'',sport:'',track:''};
   content.search=content.search||{}; content.search.series=content.search.series||['Venox Stainless Steel','Venox Titanium'];
   content.search.brands=content.search.brands||['BMW','AUDI','MERCEDES-BENZ','TOYOTA GR','HONDA','PORSCHE','FERRARI','LAMBORGHINI','MCLAREN'];
   showTab('hero'); markSaved();

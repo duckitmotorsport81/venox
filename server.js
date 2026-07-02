@@ -97,8 +97,8 @@ const storage = multer.diskStorage({
     cb(null, `${base}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}${ext}`);
   }
 });
-// accept any image or video type (mp4, webm, mov/quicktime, m4v, ogg, …)
-const ALLOWED = /^(image|video)\//;
+// accept any image, video or audio type (jpg, png, mp4, mov, mp3, wav, m4a, …)
+const ALLOWED = /^(image|video|audio)\//;
 const upload = multer({
   storage,
   limits: { fileSize: 200 * 1024 * 1024 },
@@ -150,7 +150,7 @@ app.post('/api/upload', requireAuth, (req, res) => {
 });
 
 // export single self-contained file (all media inlined as base64)
-const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml', mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', qt: 'video/quicktime', m4v: 'video/x-m4v', ogv: 'video/ogg' };
+const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml', mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', qt: 'video/quicktime', m4v: 'video/x-m4v', ogv: 'video/ogg', mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', m4a: 'audio/mp4', aac: 'audio/aac' };
 function inlineMedia(html) {
   const cache = {};
   return html.replace(/\/media\/([A-Za-z0-9._-]+)/g, (m, file) => {

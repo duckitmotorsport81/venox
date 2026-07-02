@@ -671,9 +671,9 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
       <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem);margin-top:14px">Pick your <span class="hl">volume.</span></h2>
       <p class="lead" style="margin-top:18px">From a refined OEM-plus murmur to a full open-valve roar, VENOX gives you the range — and the switch to move between them whenever you like.</p>
       <div class="modes" role="group" aria-label="Sound mode">
-        <button class="mode-btn" data-speed="1.5">Comfort</button>
-        <button class="mode-btn active" data-speed="1.05">Sport</button>
-        <button class="mode-btn" data-speed="0.6">Track</button>
+        <button class="mode-btn" data-speed="1.5" data-audio="{{SOUND_COMFORT}}">Comfort</button>
+        <button class="mode-btn active" data-speed="1.05" data-audio="{{SOUND_SPORT}}">Sport</button>
+        <button class="mode-btn" data-speed="0.6" data-audio="{{SOUND_TRACK}}">Track</button>
       </div>
       <p class="form-note" style="text-align:left;margin-top:18px">Hook your own VENOX sound clips to these buttons — the visualiser is wired to switch on click.</p>
     </div>
@@ -931,6 +931,7 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
     b.style.animationDuration = (0.8 + Math.random()*0.6).toFixed(2)+'s';
     viz.appendChild(b);
   }
+  var soundPlayer = new Audio();
   document.querySelectorAll('.mode-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
       document.querySelectorAll('.mode-btn').forEach(function(x){ x.classList.remove('active'); });
@@ -939,6 +940,10 @@ footer{border-top:1px solid var(--line);background:var(--carbon);padding-block:6
       viz.querySelectorAll('.bar').forEach(function(bar){
         bar.style.animationDuration = (base * (0.7 + Math.random()*0.6)).toFixed(2)+'s';
       });
+      // play this mode's uploaded sound clip (if any); stop whatever was playing
+      var src = btn.getAttribute('data-audio');
+      soundPlayer.pause();
+      if(src){ soundPlayer.src = src; soundPlayer.currentTime = 0; var p = soundPlayer.play(); if(p && p.catch) p.catch(function(){}); }
     });
   });
 

@@ -219,5 +219,10 @@
       "address": "No.42A, Jln Hang Lekir 12, Taman Industri Jaya, 81300 Skudai, Johor Darul Ta'zim",
       "contact": "+60 12-701 9588"
     }
-  ]
+  ],
+  "sound": {
+    "comfort": "",
+    "sport": "",
+    "track": ""
+  }
 }

@@ -44,6 +44,7 @@ const content = {
     series: ['Venox Stainless Steel', 'Venox Titanium'],
     brands: ['BMW', 'AUDI', 'MERCEDES-BENZ', 'TOYOTA GR', 'HONDA', 'PORSCHE', 'FERRARI', 'LAMBORGHINI', 'MCLAREN']
   },
+  sound: { comfort: '', sport: '', track: '' },
   hero: { slides: [] },
   systems: [],
   featured: [],
