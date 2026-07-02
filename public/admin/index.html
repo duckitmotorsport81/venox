@@ -399,8 +399,10 @@ function renderModels() {
   const engineSuggestions = [...new Set(content.models.map(x=>x.engine).filter(Boolean))];
   content.models.forEach((m, i) => {
     const card = el('div', { class:'card' });
+    const hdr = el('h3',{text:(m.brand?m.brand+' — ':'')+(m.title||'Model')});
+    const syncHdr = ()=>{ hdr.textContent=(m.brand?m.brand+' — ':'')+(m.title||'Model'); };
     card.append(el('div',{class:'sectionhead'},[
-      el('h3',{text:(m.brand?m.brand+' — ':'')+(m.title||'Model')}),
+      hdr,
       el('div',{},[
         el('button',{class:'btn btn-sm',type:'button',disabled:i===0,onclick:()=>{ move(content.models,i,-1); markDirty(); renderModels(); }},'↑'),
         ' ',
@@ -452,8 +454,8 @@ function renderModels() {
     const matOpts = MATERIALS.slice();
     if (m.mat && matOpts.indexOf(m.mat) < 0) matOpts.unshift(m.mat);
     card.append(el('div',{class:'row',style:'margin-top:16px'},[
-      selectField('Brand', m.brand, brandOpts, v=>m.brand=v, {hint:'Choose from the Brand list (edit it on the Search filters tab).'}),
-      textField('Title', m.title, v=>m.title=v, {ph:'e.g. G82 M4 Exhaust'})
+      selectField('Brand', m.brand, brandOpts, v=>{ m.brand=v; syncHdr(); }, {hint:'Choose from the Brand list (edit it on the Search filters tab).'}),
+      textField('Title', m.title, v=>{ m.title=v; syncHdr(); }, {ph:'e.g. G82 M4 Exhaust'})
     ]));
     card.append(el('div',{class:'row'},[
       textField('Subtitle', m.sub, v=>m.sub=v, {ph:'e.g. M-Performance Valvetronic Exhaust System'}),
